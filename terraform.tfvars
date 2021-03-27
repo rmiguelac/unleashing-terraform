@@ -1,0 +1,2 @@
+location       = "brazilsouth"
+prefix         = "tf"
