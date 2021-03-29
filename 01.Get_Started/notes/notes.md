@@ -39,3 +39,29 @@ Going from ~>3.0 to ~>2.0 will fail. Need to delete the file or
 
 ```terraform init -upgrade```
 
+#### Attributes and output values
+
+Very important
+
+If I want to take the public ip, s3 bucket, a domain name, any information, I can demand this information from Terraform
+
+outputs can work as inputs for other resources (ip whitelisted in security group, for example). This looks like the terraform interpolation.
+
+```hcl
+resource "aws_eip" "lb" {
+    vpc     = true
+}
+
+output "blabla" {
+    value   = aws_eip.lb.public_ip 
+}
+```
+
+Those fields can ben found in the documentation of the provider under the **Attributes Reference**
+
+If i deleted public_ip from the value above, I will see _all_ atributes
+Also, the output is in the state file
+
+!!!!!!!!!! TRY THIS
+
+OBS: Comments in tf are achieved with ```/* */```
