@@ -27,10 +27,10 @@ OBS2: If we dont specify something in the .tf file, for example, the security gr
 +----------------+----------------------------------+
 | Version        |      Versions taken              |
 +----------------+----------------------------------+
-|>=1.0           | Greater than or equal to         |
-|<=1.0           | Less than or equal to            |
-|~>2.0           | Any version in 2.X range         |
-|>=2.10,<=2.30   | Any version between 2.10 and 2.30|
+| >=1.0          | Greater than or equal to         |
+| <=1.0          | Less than or equal to            |
+| ~>2.0          | Any version in 2.X range         |
+| >=2.10,<=2.30  | Any version between 2.10 and 2.30|
 +----------------+----------------------------------+
 
 The file .terraform.lock.hcl locks the version that the provider will use
