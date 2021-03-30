@@ -100,6 +100,39 @@ OBS: precedence for variables is first:
 
 where 1 is less precedence and 4 is higher precedence
 
-> file > env
+OBS: We can define custom variable validation https://www.terraform.io/docs/language/values/variables.html - the same in a lesser extent happens when we define a variable type - such as string, list, number, map, ... We can even go further and define list(string). It is consider best practice to define it in all vars.
 
-OBS: We can define custom variable validation https://www.terraform.io/docs/language/values/variables.html
+we can look for variables in a map using, for example, the ```lookup ```
+
+```hcl
+lookup(var.sku, var.location)
+```
+
+where the var.sku is a map that has var.location as one of it's keys.
+https://learn.hashicorp.com/tutorials/terraform/azure-variables?in=terraform/azure-get-started
+
+OBS: the *.auto.tfvars is read by terraform cloud for remote execution
+
+
+#### Outputing values
+
+we can define blocks that will display a particular information once terraform apply runs. Those blocks are output ones.
+
+```hcl
+output "public_ip_address" {
+    value = data.azurerm_public_ip.ip.ip_address
+}
+```
+
+to get those values, once we already ran the apply, we can use the command ```terraform output label```, where label is the name we gave to the output block, for example
+
+```hcl
+terraform output public_ip_address
+```
+
+#### Terraform state
+
+Best practice: Store the state securely and encrypted by running Terraform in a remote environment with shared access to state. This can be achieve using remote backends
+https://www.terraform.io/docs/language/settings/backends/index.html and https://www.terraform.io/cloud
+
+!!!!!!!!!! TEST IT!
