@@ -65,3 +65,41 @@ Also, the output is in the state file
 !!!!!!!!!! TRY THIS
 
 OBS: Comments in tf are achieved with ```/* */```
+
+OBS: If you require to concat a variable to a string or int, the terraform interpolation might fail. To do so, use "${resource.name.field}/32"
+
+#### Variables
+
+we can defines variables in the default style
+
+```hcl
+variable "bla" {
+    default = "ble"
+}
+```
+
+If we define a variable empty, terraform will ask for it during the execution
+
+we can also define variables in the command line, using the this will have a higher precedence over the top one
+
+```hcl
+terraform plan -var="instancetype=t2.small"
+```
+
+Also, variables can come from a file, which should be called ```terraform.tfvars```. It will be taken automatically, no need to reference it. If, by any request, we need to have a file with a different name, we must explicit reference it with ```terraform plan -var-file="your_var_file.tfvars" ```
+
+Best practise is having a variable with default value. Also, we should have tfvars file so we can overwrite the values (like helm values)
+
+Lastly, we can use environment variables to define variables within terraform. For that, those environment variables must start with the prefix ```TF_VAR_``` followed by the variable name we want, meaning, if we want to define the ``` nsg_name ``` as environment variable, the linux/mac/windows env var should be defined as ``` TF_VAR_nsg_name ```. 
+
+OBS: precedence for variables is first:
+1. load from environment variables
+2. load from .tfvars (lexical order)
+3. load from .tfvars.json (lexical order)
+4. load form -var or -var-file
+
+where 1 is less precedence and 4 is higher precedence
+
+> file > env
+
+OBS: We can define custom variable validation https://www.terraform.io/docs/language/values/variables.html
