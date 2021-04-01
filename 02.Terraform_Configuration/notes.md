@@ -157,3 +157,50 @@ Load of .tf or .tf.json files happens in lexical order.
 This is good to organize the TF modules. We can have the provider.tf that declares the provider, the variables.tf that will have the variables and so on...
 
 resource_type.resource_name must be unique accross all read files.
+
+### Dynamic blocks
+
+the challenge is having a security group with N ingress rules, how to achieve it?
+
+```hcl
+dynamic "ingress" {
+    for_each = var.ingress_ports
+
+    content {
+        from_port = ingress.value
+        to_port = ingress.value
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+```
+
+where those vars are
+
+```hcl
+variable "sg_ports {
+    type = list(number)
+    default = [8200, 8201, 8300, 9200, 9500]
+}
+
+```
+
+#### Taint resources in Terraform
+
+Terraform taint marks a terraform-managed resource as tainted, forcing it to be destroyed and recreated on the next apply
+
+```terraform taint provider_resource.resource_name```
+
+this will put a taint status in the state file, which is then removed after terraform apply
+
+
+#### Splat expression
+
+Allow us to retrieve a list of all attributes of a resource
+
+For that, in the _output block_ we can reference all indexes of a list
+
+#### Terraform Graph
+
+The ```terraform graph > terraform.dot ``` can be converted into a graph image (can be use graphviz).
+This then will generate an image that will show the terraform resources dependencies
