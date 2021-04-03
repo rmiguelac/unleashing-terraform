@@ -100,7 +100,7 @@ One example: ```lookup(var.sku, var.region)```
 one good function to know is the ```file("${file.path}/file_name")``` which returns the content of the file as a string
 another one is ```timestamp()```
 
-OBS: terraform has the ```terraform console``` command, that we can use to test those functions
+**OBS:** terraform has the ```terraform console``` command, that we can use to test those functions
 
 !!!! TEst few!
 
@@ -109,7 +109,7 @@ OBS: terraform has the ```terraform console``` command, that we can use to test 
 data to be fetched from somewhere to be used by Terraform. For that, we make use of the ```data {}``` block
 For example, found [here](https://www.terraform.io/docs/language/data-sources/index.html):
 
-QUESTION: do we have the same for azure? where we can see which ubuntu images we have, windows server, etc?
+**QUESTION:** do we have the same for azure? where we can see which ubuntu images we have, windows server, etc?
 
 ```hcl
 data "aws_ami" "example" {
@@ -128,13 +128,13 @@ data "aws_ami" "example" {
 the logs from terraform commands can be changed by setting the ```TF_LOG``` environment variable with one of the following values:
 * TRACE, DEBUG, INFO, WARN or ERROR
 
-QUESTION: from the logs, I can see .terraformrc, what is this file??
+**QUESTION:** from the logs, I can see .terraformrc, what is this file??
 
-TEST: put TF_LOG to TRACE and run a simple plan to understand the Terraform flow
+**TEST:** put TF_LOG to TRACE and run a simple plan to understand the Terraform flow
 
 Also, we can make use of the ```TF_LOG_PATH``` variable to store the log into a file somewhere
 
-TEST: try to run terraform in Jenkins with those environment variables, as well as cache them in the pipeline(?) to be available at each build
+**TEST:** try to run terraform in Jenkins with those environment variables, as well as cache them in the pipeline(?) to be available at each build
 
 #### Terraform formatting and validation
 
@@ -144,8 +144,8 @@ It will validate un-asigned variables as well.
 
 To run the validation, the currect dir must've been initialized already.
 
-QUESTION: I suppose the best practise when changing the file, is to put a pre-commit(?) git hook that runs fmt and validate??
-TEST: try above question.
+**QUESTION:** I suppose the best practise when changing the file, is to put a pre-commit(?) git hook that runs fmt and validate??
+**TEST:** try above question.
 
 Also, I imagine that ```terraform plan``` does, besides the ```terraform refresh```, the ```terraform validate``` as well
 
@@ -204,3 +204,81 @@ For that, in the _output block_ we can reference all indexes of a list
 
 The ```terraform graph > terraform.dot ``` can be converted into a graph image (can be use graphviz).
 This then will generate an image that will show the terraform resources dependencies
+
+#### Saving plans to a file
+
+```terraform plan -out=planX``` and to apply ```terraform apply planX ```
+
+The generated file is a binary file
+
+#### Terraform output
+
+with ```terraform output output_block_name``` we can get the output of an output block from .tf file once its applied.
+
+#### Terraform settings
+
+We can configure terraform in code as well, using the block
+
+```hcl
+terraform { 
+    required_version = "> 0.12.0"   ### This will make sure that the config will only run if this matches
+    required_providers {            ### Will define which provider needs to be used
+        blabla = {
+            source = '...'
+            version = '...'
+        }
+    }
+
+    ...
+
+}
+```
+
+#### Dealing with large infrastructure
+
+We might face issues regarding API limits for a provider (Terraform make API calls to create the resources)
+
+If we run _terraform plan_ alone, it will make several api calls just to update the current state of the resources.
+
+The best way to handle this is, instead of having a huge file with all resources, have separate folders for different resources/purposes and plan in each of them, one at a time.
+
+Also, the terraform refresh can be ignored when planning if we add the flag _-refresh=false_ flag
+Another way to avoid multiple API calls, we can also target a specific resource with the _-target=resource_ flag, instead of all the resources.
+Those flags can be use at the same time.
+
+Those flags are not to be used in production!
+
+**OBS:** we can run ```terraform apply -auto-approve``` to accept the confirmation terraform requires.
+
+#### Zipmap function
+
+Construcs of map from a list of keys and corresponding of values (like the zip from python)
+
+zipmap(['1', '2', '3'], ['z', 'x', 'y']) =
+{
+    '1': 'z',
+    '2': 'x',
+    '3': 'y'
+}
+
+#### Terraform State
+
+The state is used to dimish the required complexity of checking what is the real infrastructure state.
+Terraform expects each remote object to be bounded to only one resource instance - if we don't change the state manually, this is automatically achieved. We could change state by importing stuff into it - using the command ```terraform import```, and then, making sure we have a corresponding resource mapping it.
+
+The state file can also hold dependency information because, imagine the following; The .tf files were deleted and we only have the state. To destroy the objects, terraform must know the proper order. Therefore, latest dependency is tracked in the state file as well.
+
+Besided metadata and mappings from resources to actual provider objects, we must take into consideration the **performance**. For that terraform uses the cached state.
+
+The default name is _terraform.tfstate_ and is stored locally. Yet, it can be stored remotely.
+The first command terraform runs is the refresh, to update the state with the real infrastructure.
+
+**Workspaces** are places where a persistent data stored in a backend belongs to.
+Workspaces are good to logically isolate groups of resources.
+
+Also, we can have a workspace for testing purposes, to make sure all changes in the .tf files are ok.
+
+Terraform state can contain **sensitive data**. If stored remotely, it can be encrypted at rest BUT depends on the specified backend.
+_Terraform Cloud_ encrytps state at rest and uses TLS in transit. Also S3 supports encryption at rest.
+
+**TEST:** Try to store the state file remotely in azure storage!!!
