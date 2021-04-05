@@ -9,6 +9,7 @@ Destroy-time - runs before the resource is actually destroyed
 ```hcl
 resource "" {
 
+
     provisioner "local-exec" {
         when = destroy
         command = ...
@@ -35,3 +36,5 @@ resource "" {
 ## Modules and Workspaces
 
 #### DRY Principle
+
+Using modules
