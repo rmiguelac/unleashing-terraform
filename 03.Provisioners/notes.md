@@ -122,3 +122,7 @@ module "aks" {
 Terraform allows us to have multiple workspaces. 
 Each workspace can have different environment variables.
 To show workspaces ```terraform workspace list``` and ```terraform workspace show``` to see which one is active.
+
+Terraform provides the terraform.workspace variable to be used within .tf files
+
+TF state will be maintained inside .terraform/<workspace>/terraform.tfstate - one for each dir. For the default workspace, the terraform.tfstate is saved in the root folder, not in the .terraform/workspace.
