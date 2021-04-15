@@ -83,3 +83,48 @@ Write operations lock the state file as two simulatenous writes could corrupt th
 **QUESTION:** how do I check if the backend supports _state locking_?
 **QUESTION:** does azure backend support _state locking_ ?
 
+#### State Management - state CLI
+
+the terraform offers several state commands:
+
+* ```terraform state list```
+    shows one resource at a time/line that are in the state file
+
+* ```terraform state mv```
+    used to rename existing resources or relocate them
+    due do destructive nature of this command, a backup copy of the prior state is output
+    ```terraform state mv [options] SOURCE DESTIONATION```
+    to rename: ```terraform state mv aws_instance.webapp aws_instance.myec2``` - this does not change the .tf files
+
+* ```terraform state pull```
+    pulls (downloads) the state from remote backend and prints its content
+
+* ```terraform state push```
+    manually upload a local state file to remote state
+
+* ```terraform state rm```
+    remove resource from state file
+    This will not destroy the resorce
+    Terraform will not handle the resource anymore
+    If we still reference the resource in .tf files, it will be recreated
+
+* ```terraform state show```
+    show attributes of a single resource
+    example: ```terraform state show aws_iam_user.lb```
+
+#### Terraform import
+
+Used to import into terraform if resources are created prior to terraform adoption. Can also be used when someone creates resources manually
+Import only do so in the state file, meaning that the .tf file must be written in any case [doc](https://www.terraform.io/docs/cli/import/index.html). For this reason, prior to running terraform import, we must have the .tf resource definitions to which the imported object will be mapped.
+Imports only one resource at a time.
+Not all terraform resources are currently importable.
+
+to import into resource ```terraform import aws_instance.foo i-abcd1234```
+
+to import into resource with count ```terraform import 'aws_instance.baz[0]' i-acbd1234```
+
+to import into module ```terraform import module.foo.aws_instance.bar i-abcd1234```
+
+
+
+
