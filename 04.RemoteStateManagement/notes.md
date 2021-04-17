@@ -66,8 +66,6 @@ terraform {
 Also, initialize the terraform backend by running the ```terraform init```
 For more information, visit [this](terraform.io/docs/backends/types)
 
-**TASK:** Implement something using a backend from azure
-
 There are 2 major types of backend types:
 
 * Standard - state storage and locking
