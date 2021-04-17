@@ -110,6 +110,7 @@ data to be fetched from somewhere to be used by Terraform. For that, we make use
 For example, found [here](https://www.terraform.io/docs/language/data-sources/index.html):
 
 **QUESTION:** do we have the same for azure? where we can see which ubuntu images we have, windows server, etc?
+    * does not seem like it, was unable to find it
 
 ```hcl
 data "aws_ami" "example" {
@@ -129,12 +130,13 @@ the logs from terraform commands can be changed by setting the ```TF_LOG``` envi
 * TRACE, DEBUG, INFO, WARN or ERROR
 
 **QUESTION:** from the logs, I can see .terraformrc, what is this file??
+    * This file is responsible for changing the behaviour of the CLI as well as declare the TF Cloud and Enterprise credentials
 
 **TEST:** put TF_LOG to TRACE and run a simple plan to understand the Terraform flow
 
 Also, we can make use of the ```TF_LOG_PATH``` variable to store the log into a file somewhere
 
-**TEST:** try to run terraform in Jenkins with those environment variables, as well as cache them in the pipeline(?) to be available at each build
+**TEST:** try to run terraform in Jenkins with those environment variables, as well as cache the plan
 
 #### Terraform formatting and validation
 
