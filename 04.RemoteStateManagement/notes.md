@@ -79,7 +79,9 @@ Write operations lock the state file as two simulatenous writes could corrupt th
 
 **OBS:** s3 backend does not support _state locking_ by default, we must use dynamoDB for locking purposes - read the docs
 **QUESTION:** how do I check if the backend supports _state locking_?
+    * Read the documentation of the backend [Backends](https://www.terraform.io/docs/language/settings/backends/azurerm.html#)
 **QUESTION:** does azure backend support _state locking_ ?
+    * [Yes](https://www.terraform.io/docs/language/settings/backends/azurerm.html#)
 
 #### State Management - state CLI
 
