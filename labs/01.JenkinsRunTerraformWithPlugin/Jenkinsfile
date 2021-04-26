@@ -1,0 +1,20 @@
+pipeline {
+    stages {
+        stage("Get terraform project") {
+            // Pull from git the latest terraform files
+
+        }
+        stage("Init") {
+            // Install the providers, plugins and initialize the backend if any
+
+        }
+        stage("Plan") {
+            // Execute terraform plan and save the output to file to be both archived and sent to nexus
+
+        }
+        stage("Apply") {
+            // Run the terraform apply to create the infrastructure de facto
+
+        }
+    }
+}
