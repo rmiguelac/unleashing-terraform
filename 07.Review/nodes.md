@@ -619,3 +619,11 @@ Cloud providers implement rate limited, which makes Terraform only be able to re
 It is important to break larger configurations intomultiple smaller configurations that can be independently applied.
 
 Alternative, you can make use of -refresh=false and target flag for a workaround (not recommended)
+
+#### Upgrade plugins
+
+```bash
+$ terraform init -upgrade
+```
+
+will update all the previous installation to latest version
